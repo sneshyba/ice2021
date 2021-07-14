@@ -1,4 +1,4 @@
-ice2021
+ice2021 repository
 
 This is a repository for ice surface data as determined by Scanning electron microscopy & Gauss-Newton Bayesian Framework (GNBF)
 
