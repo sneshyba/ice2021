@@ -1,0 +1,26 @@
+Trying to remember how this goes ...
+
+Looking at the image as displayed by GNBF_makextlvecs, the coordinate system seems to be
++x is to the right
++y is down
++z is into the plane
+xyz form a right-handed coordinate system.
+
+The three colored vectors are:
+bvec (green) is x'
+avec (red) is y'
+cvec (blue) is z'
+x'y'z' also form a right-handed coordinate system.
+
+We want to vary xpos, ypos, alpha, beta, and gamma, such that
+-The origin (xpos & ypos) put the center on a corner of the crystal
+-cvec (blue) points along the c-axis of the crystal (perpendicular to basal plane)
+-bvec (green) points along the boundary between the basal and one pyramidal
+-avec (red) points along the boundary between the basal and another pyramidal
+
+Strategy:
+1. Move xpos & ypos bars into position
+2. Adjust gamma until blue lines up with a c-axis
+3. Adjust alpha and beta until red and green line up
+
+Once there, take a snapshot, upload to the working folder, and rename to "alphabetagamma.png". Then execute the remaining cell, which saves the 'Xtlvecs.nml' file (which will get picked up by GNBF_calibrate_from_Xtlvecs.
