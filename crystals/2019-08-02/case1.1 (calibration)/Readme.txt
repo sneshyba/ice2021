@@ -1,0 +1,3 @@
+2019-08-02 Case 1.1Vacc: 12kVProbe Current: 60Current Vacc: 40 PaSetting Vacc: 60 PaSet temp: -35.5Actual temp - 36Using the correlation method, the panels in Segments2.nml yield correlation scores on the order of 30 => the retrieved surfaces are reliable. The std(diff) is on the order of 4 BSU, meaning the noise must be less than that amount (assuming std(diff) reflects noise plus model error). 
+
+The panels in Segments1.nml yield correlation scores in the range 5-8, however, suggesting the fine structure of retrieved surfaces are not reliable. The std(diff) is 3.5-4 BSU.

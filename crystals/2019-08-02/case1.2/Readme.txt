@@ -1,0 +1,1 @@
+2019-08-02 Case 1.2Vacc: 12kVProbe Current: 60Current Vacc: 40 PaSetting Vacc: 60 PaSet temp: -35.5Actual temp - 36

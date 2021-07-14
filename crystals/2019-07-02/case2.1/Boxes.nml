@@ -1,0 +1,9 @@
+&Boxes
+    nx1list = 780,643,362
+    ny1list = 520,195,343
+    labellist = '*','x','+'
+    boxsize = 40
+/
+
+
+
