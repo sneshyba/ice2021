@@ -12,10 +12,10 @@ pip install numpy-stl # see https://pypi.python.org/pypi/numpy-stl:
 pip install f90nml
 pip install reliability
 
-This is work done by:
-Steven Neshyba (prior to 2020)
-Steven Neshyba and Kayden Lynch (2020) 
-Steven Neshyba and N. Reszka (2021)
+This is work done by:  
+Steven Neshyba (prior to 2020)  
+Steven Neshyba and Kayden Lynch (2020)  
+Steven Neshyba and N. Reszka (2021)  
 
 Data flow
 
