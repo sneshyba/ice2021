@@ -22,7 +22,31 @@ Data flow
 GNBF_makextlvecs
 Inputs: Images of a smooth ice crystal 
 Output: Xtlvecs.nml (nameless with vectors)
-Notes: The vectors define the orientation of a hexagonal prism
+Notes: The vectors define the orientation of a hexagonal prism:
+
+Looking at the image as displayed by GNBF_makextlvecs, the coordinate system is
+
++x is to the right
++y is down
++z is into the plane
+xyz form a right-handed coordinate system.
+
+The three colored vectors are:
+bvec (green) is x'
+avec (red) is y'
+cvec (blue) is z'
+x'y'z' also form a right-handed coordinate system.
+
+We want to vary xpos, ypos, alpha, beta, and gamma, such that
+-The origin (xpos & ypos) put the center on a corner of the crystal
+-cvec (blue) points along the c-axis of the crystal (perpendicular to basal plane)
+-bvec (green) points along the boundary between the basal and one pyramidal
+-avec (red) points along the boundary between the basal and another pyramidal
+
+Strategy:
+1. Move xpos & ypos bars into position
+2. Adjust gamma until blue lines up with a c-axis
+3. Adjust alpha and beta until red and green line up
 
 GNBF_calibrate_from_Xtlvecs
 Input: Xtlvecs.nml
