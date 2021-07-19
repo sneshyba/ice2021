@@ -15,7 +15,7 @@ pip install reliability
 This is work done by:  
 Steven Neshyba (prior to 2020)  
 Steven Neshyba and Kayden Lynch (2020)  
-Steven Neshyba and N. Reszka (2021)  
+Steven Neshyba and Natalie Reszka (2021)  
 
 Data flow
 
