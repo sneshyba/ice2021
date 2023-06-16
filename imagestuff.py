@@ -146,7 +146,7 @@ def myrectangle(draw,a,b,width=2):
     
 # Graphics functions
 def myrectanglelabel(draw,a,b,label=''):
-    #fnt = ImageFont.truetype('Keyboard.ttf', 24)
+    fnt = ImageFont.truetype('Keyboard.ttf', 24)
     width = 4
     draw.line(((a[0],a[1]),(a[0],b[1]),(b[0],b[1]),(b[0],a[1]),(a[0],a[1])),width=width)
     if label!='':
