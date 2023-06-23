@@ -385,7 +385,8 @@ def extractdots(npzfile,dx,dy):
     # Find the cosine of the angle between each pair of planes
     for i in range(0,nsegments):
         for j in range(i+1,nsegments):
-            dotprod = np.asscalar(np.dot(Normal_list[i],Normal_list[j].T))
+#             dotprod = np.asscalar(np.dot(Normal_list[i],Normal_list[j].T)) # np.asscalar has been deprecated
+            dotprod = np.ndarray.item(np.dot(Normal_list[i],Normal_list[j].T))
             print(i,j,dotprod,np.arccos(dotprod)/np.pi*180)
     return
 
