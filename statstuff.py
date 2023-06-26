@@ -509,3 +509,14 @@ def logWeibull(Z2,sigma2W,etaW):
     temp1 = Weibull(Z2,sigma2W,etaW)
     temp2 = np.log(temp1)
     return temp2
+
+def Gaussian(Z2,sigma2G):
+    term1 = 1/(sigma2G)
+    term2 = np.exp(-(Z2/sigma2G))
+    rhoW = term1*term2
+    return rhoW
+    
+def logGaussian(Z2,sigma2G):
+    temp1 = Gaussian(Z2,sigma2G)
+    temp2 = np.log(temp1)
+    return temp2
