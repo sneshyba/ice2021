@@ -125,7 +125,31 @@ def logGaussian(Z2,sigma2G):
     temp2 = np.log(temp1)
     return temp2
 
-def quadfit_to_Weibull_parameters(b,c):
-    etaW = np.sqrt(-b**2/c - b*np.sqrt(b**2 - 8*c)/c + 8)/2
-    sigmaW = 2**(3/4)*((1 - etaW**2)/c)**(1/4)/2
-    return sigmaW, etaW
+def bc_to_Weibull_parameters(b,c):
+    sigma2W = (-b - np.sqrt(b**2 - 8*c))/(4*c)
+    etaW = np.sqrt(b*sigma2W + 2)
+#     etaW = np.sqrt(-b**2/c - b*np.sqrt(b**2 - 8*c)/c + 8)/2
+#     sigmaW = 2**(3/4)*((1 - etaW**2)/c)**(1/4)/2
+    return sigma2W, etaW
+
+def bc_to_Q_parameters(b,c):
+    sigma2Q = -1/b
+    etaQ = (1-2*c/b**2)**.5
+    return sigma2Q, etaQ
+
+def Q_to_bc_parameters(sigma2Q,etaQ):
+    b = -1/sigma2Q
+    c = (1-etaQ**2)/(2*sigma2Q**2)
+    return b, c
+
+def Quadratic(Z2,sigma2Q,etaQ):
+    b,c = Q_to_bc_parameters(sigma2Q,etaQ)
+    a = 0 # For now
+    rhoQ = np.exp(a + b*Z2 +c*Z2**2)
+    return rhoQ
+    
+def logQuadratic(Z2,sigma2Q,etaQ):
+    temp1 = Quadratic(Z2,sigma2Q,etaQ)
+    temp2 = np.log(temp1)
+    return temp2
+    
