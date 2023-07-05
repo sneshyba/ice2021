@@ -139,8 +139,8 @@ def getmeannormal(surf_dzgrid_dy, surf_dzgrid_dx, ixstart, ixstop, iystart, iyst
 
 # Graphics functions
 def myrectangle(draw,a,b,width=2):
-    #fnt = ImageFont.truetype('Keyboard.ttf', 18)
-    #width = 2
+    fnt = ImageFont.truetype('Keyboard.ttf', 18)
+    width = 2
     draw.line(((a[0],a[1]),(a[0],b[1]),(b[0],b[1]),(b[0],a[1]),(a[0],a[1])),width=width)
 
     
@@ -150,8 +150,8 @@ def myrectanglelabel(draw,a,b,label=''):
     width = 4
     draw.line(((a[0],a[1]),(a[0],b[1]),(b[0],b[1]),(b[0],a[1]),(a[0],a[1])),width=width)
     if label!='':
-       #draw.text(a,' '+label,font=fnt)
-       draw.text(a,' '+label)
+         draw.text(a,' '+label,font=fnt)
+#        draw.text(a,' '+label)
         
 def linearFit(y, z):
     # Fitting with linearly generated sequence
@@ -385,7 +385,8 @@ def extractdots(npzfile,dx,dy):
     # Find the cosine of the angle between each pair of planes
     for i in range(0,nsegments):
         for j in range(i+1,nsegments):
-            dotprod = np.asscalar(np.dot(Normal_list[i],Normal_list[j].T))
+#             dotprod = np.asscalar(np.dot(Normal_list[i],Normal_list[j].T)) # np.asscalar has been deprecated
+            dotprod = np.ndarray.item(np.dot(Normal_list[i],Normal_list[j].T))
             print(i,j,dotprod,np.arccos(dotprod)/np.pi*180)
     return
 
