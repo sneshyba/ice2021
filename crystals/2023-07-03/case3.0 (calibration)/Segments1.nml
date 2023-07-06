@@ -1,9 +1,9 @@
 &Segments
-    nysegments = 1
+    nysegments = 4
     nxsegments = 7
     nacross = 40
     ndown = 40
-    nxstart = 515
-    ny1start = 500   
+    nxstart = 455
+    ny1start = 360   
 /
 
