@@ -36,7 +36,7 @@ The three colored vectors are:
 bvec (green) is x'
 avec (red) is y'
 cvec (blue) is z'
-x'y'z' also form a right-handed coordinate system.
+where x'y'z' also form a right-handed coordinate system.
 
 We want to vary xpos, ypos, alpha, beta, and gamma, such that
 -The origin (xpos & ypos) put the center on a corner of the crystal
