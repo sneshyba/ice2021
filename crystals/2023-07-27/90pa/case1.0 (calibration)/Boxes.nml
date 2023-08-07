@@ -1,0 +1,6 @@
+&Boxes
+    nx1list = 650,780,550
+    ny1list = 480,330,320
+    labellist = 'a','b','c'
+    boxsize = 20
+/
