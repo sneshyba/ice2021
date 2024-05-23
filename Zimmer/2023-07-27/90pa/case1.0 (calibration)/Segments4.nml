@@ -1,5 +1,5 @@
 &Segments
-    nysegments = 3
+    nysegments = 1
     nxsegments = 1
     nacross = 40
     ndown = 40
