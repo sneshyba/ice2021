@@ -1,6 +1,0 @@
-&Boxes
-    nx1list = 830,800,650
-    ny1list = 600,250,450
-    labellist = 'a','b','c'
-    boxsize = 20
-/
