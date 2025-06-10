@@ -435,6 +435,7 @@ def getBSgrids_asymmetricgrad(nptsx, nptsy, nmax, dvecs,beamvec,hvecs,method):
 def setupdetectorresponse(\
          BSgridA, BSgridB, BSgridC, BSgridD,
          nxi, nyi, dnx, dny):
+    # Note: This is only compatible with scipy version < 1.14 (e.g., 1.13.0)
 
     # These are rules for interpolating the response functions
     Arule = scipy.interpolate.interp2d(nxi, nyi, BSgridA.T, kind='linear')
