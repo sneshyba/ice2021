@@ -4,7 +4,8 @@ import time
 import imagestuff as ims
 import statstuff as sts
 from scipy.interpolate import griddata
-from scipy.interpolate import RegularGridInterpolator as interp2d
+# from scipy.interpolate import interp2d
+from scipy.interpolate import RegularGridInterpolator as RGI
 from scipy.stats import t as tvalue
 
 #import importlib; importlib.reload(ims)
@@ -175,42 +176,8 @@ def rBS(diffterm,specterm, ks):
     # Phong or Blinn-Phong
     return (1-ks)*diffterm + ks*specterm**2
 
-def getK(nxy_start,
-         Arule, Brule, Crule, Drule,
-         KAxrule, KAyrule,
-         KBxrule, KByrule,
-         KCxrule, KCyrule,
-         KDxrule, KDyrule):
 
-    # Unpack the vector
-    #print nxy_start[0,0]
-    nx_start = nxy_start.item(0)
-    ny_start = nxy_start.item(1)
-    #print "incoming", nx_start, ny_start
 
-    # Get the starting amplitudes
-    cA_start = Arule(nx_start,ny_start)
-    cB_start = Brule(nx_start,ny_start)
-    cC_start = Crule(nx_start,ny_start)
-    cD_start = Drule(nx_start,ny_start)
-    c_start = np.matrix([cA_start,cB_start,cC_start,cD_start], copy=False)
-
-    # Construct the starting K-vectors
-    KAx_start = KAxrule(nx_start,ny_start)
-    KAy_start = KAyrule(nx_start,ny_start)
-    KBx_start = KBxrule(nx_start,ny_start)
-    KBy_start = KByrule(nx_start,ny_start)
-    KCx_start = KCxrule(nx_start,ny_start)
-    KCy_start = KCyrule(nx_start,ny_start)
-    KDx_start = KDxrule(nx_start,ny_start)
-    KDy_start = KDyrule(nx_start,ny_start)
-    Kx = np.matrix([KAx_start,KBx_start,KCx_start,KDx_start], copy=False)
-    Ky = np.matrix([KAy_start,KBy_start,KCy_start,KDy_start], copy=False)
-    K = np.hstack((Kx,Ky))
-    # print Kx
-    # print Ky
-    #print K
-    return K, c_start
 
 def getdots(nvec,dvec,beamvec,hvec,stagetheta,axis,method,detector,facet):
 
@@ -352,7 +319,7 @@ def getBSgrids_asymmetric(nptsx, nptsy, nmax, dvecs, beamvec, hvecs, method):
         # Interpolate; there's also method='cubic'
         print (shape((nxigrid,nyigrid)))
         BSgrid = scipy.interpolate.griddata((nxigrid[mask],nyigrid[mask]), 
-                                    BS_of_n, (nxigrid, nyigrid))
+                                    BS_of_n, (nxigrid, nyigrid), method='linear')
         nanmask = np.isnan(BSgrid)
         BSgrid[nanmask] = 0
     
@@ -402,7 +369,7 @@ def getBSgrids_asymmetricgrad(nptsx, nptsy, nmax, dvecs,beamvec,hvecs,method):
     
         # Interpolate; there's also method='cubic'
         BSgrid = scipy.interpolate.griddata((nxigrid[mask],nyigrid[mask]), 
-                                    BS_of_n, (nxigrid, nyigrid))
+                                    BS_of_n, (nxigrid, nyigrid), method='linear')
         nanmask = np.isnan(BSgrid)
         BSgrid[nanmask] = 0
     
@@ -432,48 +399,80 @@ def getBSgrids_asymmetricgrad(nptsx, nptsy, nmax, dvecs,beamvec,hvecs,method):
     
 
     
-def setupdetectorresponse(\
+# def setupdetectorresponse(\
+#          BSgridA, BSgridB, BSgridC, BSgridD,
+#          nxi, nyi, dnx, dny):
+#     # Note: This is only compatible with scipy version < 1.14 (e.g., 1.13.0)
+
+#     # These are rules for interpolating the response functions
+#     Arule = scipy.interpolate.interp2d(nxi, nyi, BSgridA.T, kind='linear')
+#     Brule = scipy.interpolate.interp2d(nxi, nyi, BSgridB.T, kind='linear')
+#     Crule = scipy.interpolate.interp2d(nxi, nyi, BSgridC.T, kind='linear')
+#     Drule = scipy.interpolate.interp2d(nxi, nyi, BSgridD.T, kind='linear')
+
+#     # Calculating the gradients of the response functions
+#     KAx, KAy = np.gradient(BSgridA); KAy=KAy/dny; KAx = KAx/dnx
+#     KBx, KBy = np.gradient(BSgridB); KBy=KBy/dny; KBx = KBx/dnx
+#     KCx, KCy = np.gradient(BSgridC); KCy=KCy/dny; KCx = KCx/dnx
+#     KDx, KDy = np.gradient(BSgridD); KDy=KDy/dny; KDx = KDx/dnx
+
+#     # These are rules for interpolating the response functions
+#     KAxrule = scipy.interpolate.interp2d(nxi, nyi, KAx.T, kind='linear')
+#     KAyrule = scipy.interpolate.interp2d(nxi, nyi, KAy.T, kind='linear')
+#     KBxrule = scipy.interpolate.interp2d(nxi, nyi, KBx.T, kind='linear')
+#     KByrule = scipy.interpolate.interp2d(nxi, nyi, KBy.T, kind='linear')
+#     KCxrule = scipy.interpolate.interp2d(nxi, nyi, KCx.T, kind='linear')
+#     KCyrule = scipy.interpolate.interp2d(nxi, nyi, KCy.T, kind='linear')
+#     KDxrule = scipy.interpolate.interp2d(nxi, nyi, KDx.T, kind='linear')
+#     KDyrule = scipy.interpolate.interp2d(nxi, nyi, KDy.T, kind='linear')
+
+#     return \
+#     Arule, Brule, Crule, Drule,\
+#     KAxrule, KAyrule, KBxrule, KByrule, KCxrule, KCyrule, KDxrule, KDyrule
+
+# def setupdetectorresponse2(\
+#          BSgridA, BSgridB, BSgridC, BSgridD,
+#          nxi, nyi, dnx, dny):
+
+#     # Same as the old setupdetectorresponse, but with a transposed BSgrid coming in
+    
+#     # These are rules for interpolating the response functions
+#     Arule = scipy.interpolate.interp2d(nxi, nyi, BSgridA, kind='linear')
+#     Brule = scipy.interpolate.interp2d(nxi, nyi, BSgridB, kind='linear')
+#     Crule = scipy.interpolate.interp2d(nxi, nyi, BSgridC, kind='linear')
+#     Drule = scipy.interpolate.interp2d(nxi, nyi, BSgridD, kind='linear')
+
+#     # Calculating the gradients of the response functions
+#     KAx, KAy = np.gradient(BSgridA.T); KAy=KAy/dny; KAx = KAx/dnx
+#     KBx, KBy = np.gradient(BSgridB.T); KBy=KBy/dny; KBx = KBx/dnx
+#     KCx, KCy = np.gradient(BSgridC.T); KCy=KCy/dny; KCx = KCx/dnx
+#     KDx, KDy = np.gradient(BSgridD.T); KDy=KDy/dny; KDx = KDx/dnx
+
+#     # These are rules for interpolating the response functions
+#     KAxrule = scipy.interpolate.interp2d(nxi, nyi, KAx.T, kind='linear')
+#     KAyrule = scipy.interpolate.interp2d(nxi, nyi, KAy.T, kind='linear')
+#     KBxrule = scipy.interpolate.interp2d(nxi, nyi, KBx.T, kind='linear')
+#     KByrule = scipy.interpolate.interp2d(nxi, nyi, KBy.T, kind='linear')
+#     KCxrule = scipy.interpolate.interp2d(nxi, nyi, KCx.T, kind='linear')
+#     KCyrule = scipy.interpolate.interp2d(nxi, nyi, KCy.T, kind='linear')
+#     KDxrule = scipy.interpolate.interp2d(nxi, nyi, KDx.T, kind='linear')
+#     KDyrule = scipy.interpolate.interp2d(nxi, nyi, KDy.T, kind='linear')
+
+#     return \
+#     Arule, Brule, Crule, Drule,\
+#     KAxrule, KAyrule, KBxrule, KByrule, KCxrule, KCyrule, KDxrule, KDyrule
+
+def setupdetectorresponse3(\
          BSgridA, BSgridB, BSgridC, BSgridD,
          nxi, nyi, dnx, dny):
-    # Note: This is only compatible with scipy version < 1.14 (e.g., 1.13.0)
 
-    # These are rules for interpolating the response functions
-    Arule = interp2d(nxi, nyi, BSgridA.T)
-    Brule = interp2d(nxi, nyi, BSgridB.T)
-    Crule = interp2d(nxi, nyi, BSgridC.T)
-    Drule = interp2d(nxi, nyi, BSgridD.T)
-
-    # Calculating the gradients of the response functions
-    KAx, KAy = np.gradient(BSgridA); KAy=KAy/dny; KAx = KAx/dnx
-    KBx, KBy = np.gradient(BSgridB); KBy=KBy/dny; KBx = KBx/dnx
-    KCx, KCy = np.gradient(BSgridC); KCy=KCy/dny; KCx = KCx/dnx
-    KDx, KDy = np.gradient(BSgridD); KDy=KDy/dny; KDx = KDx/dnx
-
-    # These are rules for interpolating the response functions
-    KAxrule = interp2d(nxi, nyi, KAx.T)
-    KAyrule = interp2d(nxi, nyi, KAy.T)
-    KBxrule = interp2d(nxi, nyi, KBx.T)
-    KByrule = interp2d(nxi, nyi, KBy.T)
-    KCxrule = interp2d(nxi, nyi, KCx.T)
-    KCyrule = interp2d(nxi, nyi, KCy.T)
-    KDxrule = interp2d(nxi, nyi, KDx.T)
-    KDyrule = interp2d(nxi, nyi, KDy.T)
-
-    return \
-    Arule, Brule, Crule, Drule,\
-    KAxrule, KAyrule, KBxrule, KByrule, KCxrule, KCyrule, KDxrule, KDyrule
-
-def setupdetectorresponse2(\
-         BSgridA, BSgridB, BSgridC, BSgridD,
-         nxi, nyi, dnx, dny):
-
-    # Same as the old setupdetectorresponse, but with a transposed BSgrid coming in
+    # Same as setupdetectorresponses, but using RegularGridInterpolator instead of interp2d (which is deprecated)
     
     # These are rules for interpolating the response functions
-    Arule = interp2d(nxi, nyi, BSgridA)
-    Brule = interp2d(nxi, nyi, BSgridB)
-    Crule = interp2d(nxi, nyi, BSgridC)
-    Drule = interp2d(nxi, nyi, BSgridD)
+    Arule = RGI((nxi, nyi), BSgridA.T, method='linear')
+    Brule = RGI((nxi, nyi), BSgridB.T, method='linear')
+    Crule = RGI((nxi, nyi), BSgridC.T, method='linear')
+    Drule = RGI((nxi, nyi), BSgridD.T, method='linear')
 
     # Calculating the gradients of the response functions
     KAx, KAy = np.gradient(BSgridA.T); KAy=KAy/dny; KAx = KAx/dnx
@@ -482,14 +481,14 @@ def setupdetectorresponse2(\
     KDx, KDy = np.gradient(BSgridD.T); KDy=KDy/dny; KDx = KDx/dnx
 
     # These are rules for interpolating the response functions
-    KAxrule = interp2d(nxi, nyi, KAx.T)
-    KAyrule = interp2d(nxi, nyi, KAy.T)
-    KBxrule = interp2d(nxi, nyi, KBx.T)
-    KByrule = interp2d(nxi, nyi, KBy.T)
-    KCxrule = interp2d(nxi, nyi, KCx.T)
-    KCyrule = interp2d(nxi, nyi, KCy.T)
-    KDxrule = interp2d(nxi, nyi, KDx.T)
-    KDyrule = interp2d(nxi, nyi, KDy.T)
+    KAxrule = RGI((nxi, nyi), KAx, method='linear')
+    KAyrule = RGI((nxi, nyi), KAy, method='linear')
+    KBxrule = RGI((nxi, nyi), KBx, method='linear')
+    KByrule = RGI((nxi, nyi), KBy, method='linear')
+    KCxrule = RGI((nxi, nyi), KCx, method='linear')
+    KCyrule = RGI((nxi, nyi), KCy, method='linear')
+    KDxrule = RGI((nxi, nyi), KDx, method='linear')
+    KDyrule = RGI((nxi, nyi), KDy, method='linear')
 
     return \
     Arule, Brule, Crule, Drule,\
@@ -646,6 +645,40 @@ def getcrossindices(nx,ny):
                     Vacross[index][j][0]=ix
     return Vacross
 
+def getK(nxy_start,
+         Arule, Brule, Crule, Drule,
+         KAxrule, KAyrule,
+         KBxrule, KByrule,
+         KCxrule, KCyrule,
+         KDxrule, KDyrule):
+
+    # Unpack the vector
+    #print nxy_start[0,0]
+    nx_start = nxy_start.item(0)
+    ny_start = nxy_start.item(1)
+    #print "incoming", nx_start, ny_start
+
+    # Get the starting amplitudes
+    cA_start = Arule((nx_start,ny_start))
+    cB_start = Brule((nx_start,ny_start))
+    cC_start = Crule((nx_start,ny_start))
+    cD_start = Drule((nx_start,ny_start))
+    c_start = np.matrix([cA_start,cB_start,cC_start,cD_start], copy=False)
+
+    # Construct the starting K-vectors
+    KAx_start = KAxrule((nx_start,ny_start))
+    KAy_start = KAyrule((nx_start,ny_start))
+    KBx_start = KBxrule((nx_start,ny_start))
+    KBy_start = KByrule((nx_start,ny_start))
+    KCx_start = KCxrule((nx_start,ny_start))
+    KCy_start = KCyrule((nx_start,ny_start))
+    KDx_start = KDxrule((nx_start,ny_start))
+    KDy_start = KDyrule((nx_start,ny_start))
+    Kx = np.matrix([KAx_start,KBx_start,KCx_start,KDx_start], copy=False).T
+    Ky = np.matrix([KAy_start,KBy_start,KCy_start,KDy_start], copy=False).T
+    K = np.hstack((Kx,Ky))
+    return K, c_start.T
+
 def getbigK(\
             nx, ny, nXobs, surf_dzgrid_dx_retrieved, surf_dzgrid_dy_retrieved,
             Arule, Brule, Crule, Drule,
@@ -661,12 +694,18 @@ def getbigK(\
             dzdx = surf_dzgrid_dx_retrieved[iy,ix]
             dzdy = surf_dzgrid_dy_retrieved[iy,ix]
             nxy_last = vstack((dzdx,dzdy))
-            K_i, c_last = getK(nxy_last,
+            K_i, c_last = getK(
+            nxy_last,
             Arule, Brule, Crule, Drule,
             KAxrule, KAyrule,
             KBxrule, KByrule,
             KCxrule, KCyrule,
             KDxrule, KDyrule)
+            
+            # print('bigKx',np.shape(bigKx),bigKx)
+            # print('K_i',np.shape(K_i),K_i)
+            # print('c_last',np.shape(c_last),c_last)
+
             bigKx = hstack((bigKx,K_i[:,0]))
             bigKy = hstack((bigKy,K_i[:,1]))
             bigc_last = hstack((bigc_last,c_last))
@@ -679,7 +718,7 @@ def getbigK(\
         vbigKy[:,col] = roll(vbigKy[:,col],4*col,axis=0)
     vbigK = hstack((vbigKx, vbigKy))
     return vbigK, bigc_last
-
+    
 def getnextz(\
             z_last,za, c_obs_long,\
             Nx,Ny,nx,ny,nXobs,\
@@ -1079,7 +1118,7 @@ def retrievesegmentwithshrinking(\
     z_retrieved = reshape(z_retrieved_long,(ny,nx))
 
     # Restore to original size
-    interpz = interp2d(xarr, yarr, z_retrieved) # Expands back out to the original size
+    interpz = interp2d(xarr, yarr, z_retrieved, kind='linear') # Expands back out to the original size
     solution_interpolated = interpz(xarr_orig,yarr_orig)
     surf_xgrid, surf_ygrid = np.meshgrid(xarr_orig,yarr_orig) # Makes grids to match the solution
     
@@ -1090,10 +1129,10 @@ def shrink(xarr,yarr,cseg):
     Nx_new = int(len(xarr)/2); Ny_new = int(len(yarr)/2)
     xarr_new = np.linspace(xarr[0],xarr[-1],Nx_new)
     yarr_new = np.linspace(yarr[0],yarr[-1],Ny_new)
-    interpA = interp2d(xarr, yarr, cseg[0]); cseg[0] = interpA(xarr_new,yarr_new)
-    interpB = interp2d(xarr, yarr, cseg[1]); cseg[1] = interpB(xarr_new,yarr_new)
-    interpC = interp2d(xarr, yarr, cseg[2]); cseg[2] = interpC(xarr_new,yarr_new)
-    interpD = interp2d(xarr, yarr, cseg[3]); cseg[3] = interpD(xarr_new,yarr_new)
+    interpA = interp2d(xarr, yarr, cseg[0], kind='linear'); cseg[0] = interpA(xarr_new,yarr_new)
+    interpB = interp2d(xarr, yarr, cseg[1], kind='linear'); cseg[1] = interpB(xarr_new,yarr_new)
+    interpC = interp2d(xarr, yarr, cseg[2], kind='linear'); cseg[2] = interpC(xarr_new,yarr_new)
+    interpD = interp2d(xarr, yarr, cseg[3], kind='linear'); cseg[3] = interpD(xarr_new,yarr_new)
     return xarr_new, yarr_new, cseg
 
 def scaledown(xarr,yarr,cseg,shrinkconfidence,minimumdim):
