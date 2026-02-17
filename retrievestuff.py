@@ -4,7 +4,7 @@ import time
 import imagestuff as ims
 import statstuff as sts
 from scipy.interpolate import griddata
-from scipy.interpolate import interp2d
+from scipy.interpolate import RegularGridInterpolator as interp2d
 from scipy.stats import t as tvalue
 
 #import importlib; importlib.reload(ims)
@@ -352,7 +352,7 @@ def getBSgrids_asymmetric(nptsx, nptsy, nmax, dvecs, beamvec, hvecs, method):
         # Interpolate; there's also method='cubic'
         print (shape((nxigrid,nyigrid)))
         BSgrid = scipy.interpolate.griddata((nxigrid[mask],nyigrid[mask]), 
-                                    BS_of_n, (nxigrid, nyigrid), method='linear')
+                                    BS_of_n, (nxigrid, nyigrid))
         nanmask = np.isnan(BSgrid)
         BSgrid[nanmask] = 0
     
@@ -402,7 +402,7 @@ def getBSgrids_asymmetricgrad(nptsx, nptsy, nmax, dvecs,beamvec,hvecs,method):
     
         # Interpolate; there's also method='cubic'
         BSgrid = scipy.interpolate.griddata((nxigrid[mask],nyigrid[mask]), 
-                                    BS_of_n, (nxigrid, nyigrid), method='linear')
+                                    BS_of_n, (nxigrid, nyigrid))
         nanmask = np.isnan(BSgrid)
         BSgrid[nanmask] = 0
     
@@ -438,10 +438,10 @@ def setupdetectorresponse(\
     # Note: This is only compatible with scipy version < 1.14 (e.g., 1.13.0)
 
     # These are rules for interpolating the response functions
-    Arule = scipy.interpolate.interp2d(nxi, nyi, BSgridA.T, kind='linear')
-    Brule = scipy.interpolate.interp2d(nxi, nyi, BSgridB.T, kind='linear')
-    Crule = scipy.interpolate.interp2d(nxi, nyi, BSgridC.T, kind='linear')
-    Drule = scipy.interpolate.interp2d(nxi, nyi, BSgridD.T, kind='linear')
+    Arule = interp2d(nxi, nyi, BSgridA.T)
+    Brule = interp2d(nxi, nyi, BSgridB.T)
+    Crule = interp2d(nxi, nyi, BSgridC.T)
+    Drule = interp2d(nxi, nyi, BSgridD.T)
 
     # Calculating the gradients of the response functions
     KAx, KAy = np.gradient(BSgridA); KAy=KAy/dny; KAx = KAx/dnx
@@ -450,14 +450,14 @@ def setupdetectorresponse(\
     KDx, KDy = np.gradient(BSgridD); KDy=KDy/dny; KDx = KDx/dnx
 
     # These are rules for interpolating the response functions
-    KAxrule = scipy.interpolate.interp2d(nxi, nyi, KAx.T, kind='linear')
-    KAyrule = scipy.interpolate.interp2d(nxi, nyi, KAy.T, kind='linear')
-    KBxrule = scipy.interpolate.interp2d(nxi, nyi, KBx.T, kind='linear')
-    KByrule = scipy.interpolate.interp2d(nxi, nyi, KBy.T, kind='linear')
-    KCxrule = scipy.interpolate.interp2d(nxi, nyi, KCx.T, kind='linear')
-    KCyrule = scipy.interpolate.interp2d(nxi, nyi, KCy.T, kind='linear')
-    KDxrule = scipy.interpolate.interp2d(nxi, nyi, KDx.T, kind='linear')
-    KDyrule = scipy.interpolate.interp2d(nxi, nyi, KDy.T, kind='linear')
+    KAxrule = interp2d(nxi, nyi, KAx.T)
+    KAyrule = interp2d(nxi, nyi, KAy.T)
+    KBxrule = interp2d(nxi, nyi, KBx.T)
+    KByrule = interp2d(nxi, nyi, KBy.T)
+    KCxrule = interp2d(nxi, nyi, KCx.T)
+    KCyrule = interp2d(nxi, nyi, KCy.T)
+    KDxrule = interp2d(nxi, nyi, KDx.T)
+    KDyrule = interp2d(nxi, nyi, KDy.T)
 
     return \
     Arule, Brule, Crule, Drule,\
@@ -470,10 +470,10 @@ def setupdetectorresponse2(\
     # Same as the old setupdetectorresponse, but with a transposed BSgrid coming in
     
     # These are rules for interpolating the response functions
-    Arule = scipy.interpolate.interp2d(nxi, nyi, BSgridA, kind='linear')
-    Brule = scipy.interpolate.interp2d(nxi, nyi, BSgridB, kind='linear')
-    Crule = scipy.interpolate.interp2d(nxi, nyi, BSgridC, kind='linear')
-    Drule = scipy.interpolate.interp2d(nxi, nyi, BSgridD, kind='linear')
+    Arule = interp2d(nxi, nyi, BSgridA)
+    Brule = interp2d(nxi, nyi, BSgridB)
+    Crule = interp2d(nxi, nyi, BSgridC)
+    Drule = interp2d(nxi, nyi, BSgridD)
 
     # Calculating the gradients of the response functions
     KAx, KAy = np.gradient(BSgridA.T); KAy=KAy/dny; KAx = KAx/dnx
@@ -482,14 +482,14 @@ def setupdetectorresponse2(\
     KDx, KDy = np.gradient(BSgridD.T); KDy=KDy/dny; KDx = KDx/dnx
 
     # These are rules for interpolating the response functions
-    KAxrule = scipy.interpolate.interp2d(nxi, nyi, KAx.T, kind='linear')
-    KAyrule = scipy.interpolate.interp2d(nxi, nyi, KAy.T, kind='linear')
-    KBxrule = scipy.interpolate.interp2d(nxi, nyi, KBx.T, kind='linear')
-    KByrule = scipy.interpolate.interp2d(nxi, nyi, KBy.T, kind='linear')
-    KCxrule = scipy.interpolate.interp2d(nxi, nyi, KCx.T, kind='linear')
-    KCyrule = scipy.interpolate.interp2d(nxi, nyi, KCy.T, kind='linear')
-    KDxrule = scipy.interpolate.interp2d(nxi, nyi, KDx.T, kind='linear')
-    KDyrule = scipy.interpolate.interp2d(nxi, nyi, KDy.T, kind='linear')
+    KAxrule = interp2d(nxi, nyi, KAx.T)
+    KAyrule = interp2d(nxi, nyi, KAy.T)
+    KBxrule = interp2d(nxi, nyi, KBx.T)
+    KByrule = interp2d(nxi, nyi, KBy.T)
+    KCxrule = interp2d(nxi, nyi, KCx.T)
+    KCyrule = interp2d(nxi, nyi, KCy.T)
+    KDxrule = interp2d(nxi, nyi, KDx.T)
+    KDyrule = interp2d(nxi, nyi, KDy.T)
 
     return \
     Arule, Brule, Crule, Drule,\
@@ -1079,7 +1079,7 @@ def retrievesegmentwithshrinking(\
     z_retrieved = reshape(z_retrieved_long,(ny,nx))
 
     # Restore to original size
-    interpz = interp2d(xarr, yarr, z_retrieved, kind='linear') # Expands back out to the original size
+    interpz = interp2d(xarr, yarr, z_retrieved) # Expands back out to the original size
     solution_interpolated = interpz(xarr_orig,yarr_orig)
     surf_xgrid, surf_ygrid = np.meshgrid(xarr_orig,yarr_orig) # Makes grids to match the solution
     
@@ -1090,10 +1090,10 @@ def shrink(xarr,yarr,cseg):
     Nx_new = int(len(xarr)/2); Ny_new = int(len(yarr)/2)
     xarr_new = np.linspace(xarr[0],xarr[-1],Nx_new)
     yarr_new = np.linspace(yarr[0],yarr[-1],Ny_new)
-    interpA = interp2d(xarr, yarr, cseg[0], kind='linear'); cseg[0] = interpA(xarr_new,yarr_new)
-    interpB = interp2d(xarr, yarr, cseg[1], kind='linear'); cseg[1] = interpB(xarr_new,yarr_new)
-    interpC = interp2d(xarr, yarr, cseg[2], kind='linear'); cseg[2] = interpC(xarr_new,yarr_new)
-    interpD = interp2d(xarr, yarr, cseg[3], kind='linear'); cseg[3] = interpD(xarr_new,yarr_new)
+    interpA = interp2d(xarr, yarr, cseg[0]); cseg[0] = interpA(xarr_new,yarr_new)
+    interpB = interp2d(xarr, yarr, cseg[1]); cseg[1] = interpB(xarr_new,yarr_new)
+    interpC = interp2d(xarr, yarr, cseg[2]); cseg[2] = interpC(xarr_new,yarr_new)
+    interpD = interp2d(xarr, yarr, cseg[3]); cseg[3] = interpD(xarr_new,yarr_new)
     return xarr_new, yarr_new, cseg
 
 def scaledown(xarr,yarr,cseg,shrinkconfidence,minimumdim):
