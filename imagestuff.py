@@ -289,7 +289,7 @@ def extractflat(npzfile,dx,dy):
                       linear=True,order=1)
 
         # Get the angle of the plane in another direction
-        dzdx = mp[2]; thetaxp = np.arctan(dzdx)*180/np.pi; #print ('x:', thetaxp)
+        dzdx = mp[2]; thetaxp = np.arctan(dzdx)*180/np.pi; print ('x:', thetaxp)
 
         # Get rotation matrix & flatten in another direction
         Rotxp = myrotation_matrix([0,1,0], thetaxp)
