@@ -171,7 +171,7 @@ def numpy2stl(A, fn, scale=0.1, mask_val=None, ascii=False,
             locs = zip(X - m / 2., Y - n / 2.)
 
             zvals = facets[:, 5::3]
-            zmin, zthickness = zvals.min(), zvals.ptp()
+            zmin, zthickness = zvals.min(), np.ptp(zvals)
 
             minval = zmin - min_thickness_percent * zthickness
 
@@ -191,15 +191,15 @@ def numpy2stl(A, fn, scale=0.1, mask_val=None, ascii=False,
 
             facets = np.concatenate([facets, bottom])
 
-    xsize = facets[:, 3::3].ptp()
+    xsize = np.ptp(facets[:, 3::3])
     if xsize > max_width:
         facets = facets * float(max_width) / xsize
 
-    ysize = facets[:, 4::3].ptp()
+    ysize = np.ptp(facets[:, 4::3])
     if ysize > max_depth:
         facets = facets * float(max_depth) / ysize
 
-    zsize = facets[:, 5::3].ptp()
+    zsize = np.ptp(facets[:, 5::3])
     if zsize > max_height:
         facets = facets * float(max_height) / zsize
 

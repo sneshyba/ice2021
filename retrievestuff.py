@@ -14,7 +14,9 @@ import scipy
 from numpy import matrix, cross, zeros, reshape, vstack, hstack, empty, roll, shape
 #import scipy.interpolate
 import copy
-from numpy.linalg.linalg import norm
+# from numpy.linalg.linalg import norm
+from numpy.linalg import norm # Need to test if this works; but numpy.linalg.linalg.norm has been deprecated
+
 
 ''' A copy of fcb4, but CUDA stuff is elective. '''
 
