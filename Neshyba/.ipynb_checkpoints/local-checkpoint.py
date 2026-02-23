@@ -7,7 +7,7 @@ import gradstuff as gds
 import copy
 import f90nml
 
-def response_function(navec,nbvec,ndvec,cA,cB,cC,cD,nx1list,nx2list,ny1list,ny2list,imageroot,graphics=False, verbose=False):        
+def response_function(navec,nbvec,ndvec,cA,cB,cC,cD,nx1list,nx2list,ny1list,ny2list,imageroot, graphics=False, verbose=False):        
         ABCDangle_deg = 16
         theta = ABCDangle_deg*np.pi/180
         nboxes = len(nx1list)
@@ -80,11 +80,12 @@ def response_function(navec,nbvec,ndvec,cA,cB,cC,cD,nx1list,nx2list,ny1list,ny2l
         cB_theory = np.polyval(pB,s_theory)
         cC_theory = np.polyval(pC,s_theory)
         cD_theory = np.polyval(pD,s_theory)
-        plt.plot(s_theory,cA_theory,'-r',linewidth=2)
-        plt.plot(s_theory,cB_theory,'--b',linewidth=2)
-        plt.plot(s_theory,cC_theory,'-.y',linewidth=2)
-        plt.plot(s_theory,cD_theory,':g',linewidth=2)
-        plt.title(imageroot)
+        if graphics:
+            plt.plot(s_theory,cA_theory,'-r',linewidth=2)
+            plt.plot(s_theory,cB_theory,'--b',linewidth=2)
+            plt.plot(s_theory,cC_theory,'-.y',linewidth=2)
+            plt.plot(s_theory,cD_theory,':g',linewidth=2)
+            plt.title(imageroot)
         
         # Error in the fit
         errorA = (np.polyval(pA,slistA)-cA_obs)**2
@@ -93,9 +94,9 @@ def response_function(navec,nbvec,ndvec,cA,cB,cC,cD,nx1list,nx2list,ny1list,ny2l
         errorD = (np.polyval(pD,slistD)-cD_obs)**2
         error_tot = errorA.sum()+errorB.sum()+errorC.sum()+errorD.sum()
 
-        return error_tot, pA, pB, pC, pD
+        return pA, pB, pC, pD, error_tot
 
-def get_nvecs(angleManager, draw, cvecdir, boxa, boxb, nx1list, ny1list, verbose=False):
+def get_nvecs(angleManager, draw, cvecdir, boxa, boxb, nx1list, ny1list, verbose=False, graphics=False):
         avec = angleManager.avec
         bvec = angleManager.bvec
         cvec = angleManager.cvec
@@ -111,9 +112,10 @@ def get_nvecs(angleManager, draw, cvecdir, boxa, boxb, nx1list, ny1list, verbose
         linea = [xorigin,yorigin,xorigin+avec[0]*scale,yorigin+avec[1]*scale]
         lineb = [xorigin,yorigin,xorigin+bvec[0]*scale,yorigin+bvec[1]*scale]
         linec = [xorigin,yorigin,xorigin+cvec[0]*scale,yorigin+cvec[1]*scale]
-        draw.line(linea, fill=filla,width=linewidth)
-        draw.line(lineb, fill=fillb,width=linewidth)
-        draw.line(linec, fill=fillc,width=linewidth)
+        if graphics:
+            draw.line(linea, fill=filla,width=linewidth)
+            draw.line(lineb, fill=fillb,width=linewidth)
+            draw.line(linec, fill=fillc,width=linewidth)
         
         # The basal normal
         # cvecdir = 'pointingup'
@@ -135,7 +137,8 @@ def get_nvecs(angleManager, draw, cvecdir, boxa, boxb, nx1list, ny1list, verbose
         scaledcenterxterm = (dboxcenterx+ndvec[0]*scale).item()
         scaledcenteryterm = (dboxcentery+ndvec[1]*scale).item()
         lined_disp = list(np.squeeze([dboxcenterx,dboxcentery,scaledcenterxterm,scaledcenteryterm]).astype(int))
-        draw.line(lined_disp, fill=fillc,width=linewidth)
+        if graphics:
+            draw.line(lined_disp, fill=fillc,width=linewidth)
         
         # Normal associated with vector a
         #boxa= 'prismatic'
@@ -149,7 +152,8 @@ def get_nvecs(angleManager, draw, cvecdir, boxa, boxb, nx1list, ny1list, verbose
             scaledcenterxterm = (aboxcenterx+navec[0]*scale).item()
             scaledcenteryterm = (aboxcentery+navec[1]*scale).item()
             linea_disp = list(np.squeeze([aboxcenterx,aboxcentery,scaledcenterxterm,scaledcenteryterm]).astype(int))
-            draw.line(linea_disp, fill=filla,width=linewidth)
+            if graphics:
+                draw.line(linea_disp, fill=filla,width=linewidth)
         elif boxa== 'pyramidal':
             Rot28 = ims.myrotation_matrix(avec,-28) #this could be +/- 28, check
             navec = Rot28*navec
@@ -158,7 +162,8 @@ def get_nvecs(angleManager, draw, cvecdir, boxa, boxb, nx1list, ny1list, verbose
             scaledcenterxterm = (aboxcenterx+navec[0]*scale).item()
             scaledcenteryterm = (aboxcentery+navec[1]*scale).item()
             linea_disp = list(np.squeeze([aboxcenterx,aboxcentery,scaledcenterxterm,scaledcenteryterm]).astype(int))
-            draw.line(linea_disp, fill=filla,width=linewidth)
+            if graphics:
+                draw.line(linea_disp, fill=filla,width=linewidth)
         else: 
             print('WARNING! SPECIFY BOX A FACET')
         
@@ -174,7 +179,8 @@ def get_nvecs(angleManager, draw, cvecdir, boxa, boxb, nx1list, ny1list, verbose
             scaledbvecxterm = (bboxcenterx+nbvec[0]*scale).item()
             scaledbvecyterm = (bboxcentery+nbvec[1]*scale).item()
             lineb_disp = list(np.squeeze([bboxcenterx,bboxcentery,scaledbvecxterm,scaledbvecyterm]).astype(int))
-            draw.line(lineb_disp, fill=fillb,width=linewidth)
+            if graphics:
+                draw.line(lineb_disp, fill=fillb,width=linewidth)
         elif boxb=='pyramidal':
             Rot28 = ims.myrotation_matrix(bvec,28) #this could be +/- 28, check
             nbvec = Rot28*nbvec
@@ -185,7 +191,8 @@ def get_nvecs(angleManager, draw, cvecdir, boxa, boxb, nx1list, ny1list, verbose
             scaledbvecxterm = (bboxcenterx+nbvec[0]*scale).item()
             scaledbvecyterm = (bboxcentery+nbvec[1]*scale).item()
             lineb_disp = list(np.squeeze([bboxcenterx,bboxcentery,scaledbvecxterm,scaledbvecyterm]).astype(int))
-            draw.line(lineb_disp, fill=fillb,width=linewidth)
+            if graphics:
+                draw.line(lineb_disp, fill=fillb,width=linewidth)
         else:
             print('WARNING! SPECIFY BOX B FACET')
 
@@ -214,7 +221,7 @@ def get_box_lists(Boxesfile,draw):
 
 def retrieve_segments(\
     pA, pB, pC, pD, cA, cB, cC, cD, nx1list, nx2list, ny1list, ny2list, imageroot, dx=1, dy=1, \
-    overlapping=True, nptsx=103, nptsy=101, nstride=3):
+    overlapping=True, nptsx=103, nptsy=101, nstride=3, desired_facet_angles=[], graphics=False):
     
     # Number of segments
     nsegments = len(nx1list); print('nsegments ', nsegments)
@@ -297,7 +304,6 @@ def retrieve_segments(\
         
         # Extract the a priori variance
         vartemp = apriorivar[ny1:ny2+1,nx1:nx2+1]
-        #vartemp_long = np.reshape(vartemp,nzpts+1,0) # This appears to have been deprecated
         vartemp_long = vartemp.flatten(order='C')
         Sa = np.diag(vartemp_long[:-1]); #print "apriorivar", shape(Sa)
         
@@ -328,14 +334,15 @@ def retrieve_segments(\
         
         if isegment == 0:
             solution[ny1:ny2+1,nx1:nx2+1] = copy.copy(z_retrieved)
-            fig = plt.figure()
-            ax = fig.add_subplot(111, projection='3d')
-            ax.invert_yaxis() # invert y axis (this fixes the right-hand-oriented vs left-hand-oriented system)
-            ax.set_xlabel('x')
-            ax.set_ylabel('y')
-            ax.set_zlabel('z')
-            ax.set_title(imageroot)
-            ax.view_init(azim=-120,elev=22)
+            if graphics:
+                fig = plt.figure()
+                ax = fig.add_subplot(111, projection='3d')
+                ax.invert_yaxis() # invert y axis (this fixes the right-hand-oriented vs left-hand-oriented system)
+                ax.set_xlabel('x')
+                ax.set_ylabel('y')
+                ax.set_zlabel('z')
+                ax.set_title(imageroot)
+                ax.view_init(azim=-120,elev=22)
 
         else:
             nextsolution = np.zeros(cA.shape)
@@ -358,7 +365,8 @@ def retrieve_segments(\
         surf_y = np.arange(ny1list[isegment],ny2list[isegment]+1,1)*dy
         surf_x = np.arange(nx1list[isegment],nx2list[isegment]+1,1)*dx
         surf_xgrid, surf_ygrid = np.meshgrid(surf_x,surf_y)
-        ax.plot_surface(surf_xgrid, surf_ygrid, z_retrieved, rstride=nstride ,cstride=nstride)
+        if graphics:
+            ax.plot_surface(surf_xgrid, surf_ygrid, z_retrieved, rstride=nstride ,cstride=nstride)
 
         # Fitting
         A = surf_xgrid.reshape(nzpts+1)
@@ -373,11 +381,25 @@ def retrieve_segments(\
         Normal_list.append(Normal)
 
     # Report angle between each pair of planes
+    angle_matrix = np.zeros((nsegments,nsegments))
     print('Angles between segments')
     for i in range(0,nsegments):
         for j in range(i+1,nsegments):
             dotprod = np.ndarray.item(np.dot(Normal_list[i],Normal_list[j].T))
-            print(i,j,np.arccos(dotprod)/np.pi*180, ' degrees')
+            angle = np.arccos(dotprod)/np.pi*180
+            print(i,j,angle, ' degrees')
+            angle_matrix[i,j] = angle
+
+    # Get an error
+    error = 0
+    n_desired_facet_angles = len(desired_facet_angles)
+    print('Working on optimizing the angles ...')
+    if n_desired_facet_angles > 0:
+        for idesired in desired_facet_angles:
+            i = idesired[0]
+            j = idesired[1]
+            desired_angle = idesired[2]
+            error += (angle_matrix[i,j]-desired_angle)**2
 
     # Package up the whole surface
     nx1tot = min(nx1list)
@@ -391,8 +413,7 @@ def retrieve_segments(\
     surf_ytot = np.linspace(0,ymaxtot,nytot); #print surf_ytot[1]-surf_ytot[0]; 
     surf_xtot = np.linspace(0,xmaxtot,nxtot); #print surf_xtot[1]-surf_xtot[0]; 
     surf_xgridtot, surf_ygridtot = np.meshgrid(surf_xtot,surf_ytot)
-    settemp = solution[ny1tot:ny2tot,nx1tot:nx2tot]
-
+    surf_zgridtot = solution[ny1tot:ny2tot,nx1tot:nx2tot]
 
     # Return
-    return [surf_xgridtot, surf_ygridtot, settemp], [sA, sB, sC, sD]
+    return [surf_xgridtot, surf_ygridtot, surf_zgridtot], [sA, sB, sC, sD], error
