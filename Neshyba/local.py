@@ -7,8 +7,8 @@ import gradstuff as gds
 import copy
 import f90nml
 
-def response_function(navec,nbvec,ndvec,cA,cB,cC,cD,nx1list,nx2list,ny1list,ny2list,imageroot, graphics=False, verbose=False):        
-        ABCDangle_deg = 16
+def response_function(\
+    navec,nbvec,ndvec,cA,cB,cC,cD,nx1list,nx2list,ny1list,ny2list,imageroot, graphics=False, verbose=False, ABCDangle_deg = 16):        
         theta = ABCDangle_deg*np.pi/180
         nboxes = len(nx1list)
         if verbose: print ("nboxes =", nboxes)
