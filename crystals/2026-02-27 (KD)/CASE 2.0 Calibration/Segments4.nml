@@ -1,0 +1,9 @@
+&Segments
+    nysegments = 5
+    nxsegments = 1
+    nacross = 33
+    ndown = 32
+    nxstart = 750
+    ny1start = 615   
+/
+

@@ -265,7 +265,7 @@ def retrieve_segments(\
     solution = np.zeros(cA.shape)
 
     # Generic retrieval parameters
-    maxiter = 3
+    maxiter = 2
     tolerance = 15
 
     # Define the variance in the observations (BS units^2)
