@@ -246,7 +246,7 @@ def extractflat(npzfile,dx,dy):
     nx2list = npzfile['nx2list']
     ny1list = npzfile['ny1list']
     ny2list = npzfile['ny2list']
-    solution = npzfile['solution']
+    solution = npzfile['solution']; print('From extractflat, shape of solution ', np.shape(solution))
     nsegments = len(nx1list)
     xseggridtot = []
     yseggridtot = []
@@ -259,12 +259,17 @@ def extractflat(npzfile,dx,dy):
     for isegment in range(0,nsegments):
 
         # Extract this segment
-        nx1=nx1list[isegment]; nx2=nx2list[isegment]; nxsegment = nx2-nx1+1
-        ny1=ny1list[isegment]; ny2=ny2list[isegment]; nysegment = ny2-ny1+1
+        print('From extractflat, working on isegment ', isegment)
+        nx1=nx1list[isegment]; nx2=nx2list[isegment]; nxsegment = nx2-nx1+1; print('From extractflat, ', nx1, nx2)
+        ny1=ny1list[isegment]; ny2=ny2list[isegment]; nysegment = ny2-ny1+1; print('From extractflat, ', ny1, ny2)
+        print('From extractflat, nxsegment, nysegment ', nxsegment, nysegment)
         surf_xseg = np.linspace(0,(nxsegment-1)*dx,nxsegment); 
         surf_yseg = np.linspace(0,(nysegment-1)*dy,nysegment); 
         surf_xseggrid, surf_yseggrid = np.meshgrid(surf_xseg,surf_yseg) # 1st index is y, 2nd is x
+        print('From extractflat, shape of x and y grids ',np.shape(surf_xseggrid),np.shape(surf_yseggrid))
+        dummy1 = solution[ny1:ny2+1,nx1:nx2+1]; print('From extractflat, shape of dummy1 ', np.shape(dummy1))
         surf_zseggrid = copy.copy(np.flipud(solution[ny1:ny2+1,nx1:nx2+1])) # This flips the y-coordinate
+        print('From extractflat, shape of z grid ',np.shape(np.shape(surf_zseggrid))
 
         # Fit a plane to the data and adjust data to start at the origin
         m = polyfit2d(\
