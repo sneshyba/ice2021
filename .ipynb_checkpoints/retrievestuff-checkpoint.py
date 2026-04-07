@@ -1582,4 +1582,4 @@ def retrieve_segments(\
     surf_zgridtot = solution[ny1tot:ny2tot,nx1tot:nx2tot]
 
     # Return
-    return [surf_xgridtot, surf_ygridtot, surf_zgridtot], [sA, sB, sC, sD], error
+    return [surf_xgridtot, surf_ygridtot, surf_zgridtot], [sA, sB, sC, sD], nxi, nyi, dnx, dny, error
