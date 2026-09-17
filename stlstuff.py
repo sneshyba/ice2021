@@ -8,6 +8,7 @@ This temporary script file is located here:
 
 import struct
 import numpy as np
+from matplotlib import pyplot as plt
 from itertools import product
 c_lib = False
 #try:
@@ -233,31 +234,12 @@ def addskirt(settemp,bottom=1000):
     
     return settemp4
 
-def curvature(y,dx):
-    """
-    Calculate curvature of y(x) for equally spaced x values.
-
-    Parameters
-    ----------
-    y : array-like
-        y values.
-    dx : float
-        Spacing between x values.
-
-    Returns
-    -------
-    kappa : ndarray
-        Curvature at each point.
-
-    # dummyx = np.linspace(-5,10,100)
-    # curvature = .005
-    # dummyy = dummyx*.1 + 1/2*dummyx**2*curvature
-    # plt.plot(dummyx,dummyy)
-    # print(sls.curvature(dummyy,dummyx[1]-dummyx[0]))
-
-    """
-    y = np.asarray(y)
-    dy = np.gradient(y, dx)
-    d2y = np.gradient(dy, dx)
-
-    return np.mean(np.abs(d2y) / (1 + dy**2)**1.5)
+def curvature(x_mid,z_of_x):
+    p = np.polyfit(x_mid,z_of_x,2); print(p)
+    curvature_in_x = p[0]*2
+    plt.figure()
+    plt.plot(x_mid,z_of_x,'+')
+    plt.plot(x_mid,np.polyval(p,x_mid))
+    plt.grid(True)
+    plt.xlabel('x')
+    return curvature_in_x
