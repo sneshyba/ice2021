@@ -232,3 +232,32 @@ def addskirt(settemp,bottom=1000):
     #print (nxtot,nytot)
     
     return settemp4
+
+def curvature(y,dx):
+    """
+    Calculate curvature of y(x) for equally spaced x values.
+
+    Parameters
+    ----------
+    y : array-like
+        y values.
+    dx : float
+        Spacing between x values.
+
+    Returns
+    -------
+    kappa : ndarray
+        Curvature at each point.
+
+    # dummyx = np.linspace(-5,10,100)
+    # curvature = .005
+    # dummyy = dummyx*.1 + 1/2*dummyx**2*curvature
+    # plt.plot(dummyx,dummyy)
+    # print(sls.curvature(dummyy,dummyx[1]-dummyx[0]))
+
+    """
+    y = np.asarray(y)
+    dy = np.gradient(y, dx)
+    d2y = np.gradient(dy, dx)
+
+    return np.mean(np.abs(d2y) / (1 + dy**2)**1.5)
