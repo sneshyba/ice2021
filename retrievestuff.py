@@ -401,68 +401,68 @@ def getBSgrids_asymmetricgrad(nptsx, nptsy, nmax, dvecs,beamvec,hvecs,method):
     
 
     
-# def setupdetectorresponse(\
-#          BSgridA, BSgridB, BSgridC, BSgridD,
-#          nxi, nyi, dnx, dny):
-#     # Note: This is only compatible with scipy version < 1.14 (e.g., 1.13.0)
+def setupdetectorresponse(\
+         BSgridA, BSgridB, BSgridC, BSgridD,
+         nxi, nyi, dnx, dny):
+    # Note: This is only compatible with scipy version < 1.14 (e.g., 1.13.0)
 
-#     # These are rules for interpolating the response functions
-#     Arule = scipy.interpolate.interp2d(nxi, nyi, BSgridA.T, kind='linear')
-#     Brule = scipy.interpolate.interp2d(nxi, nyi, BSgridB.T, kind='linear')
-#     Crule = scipy.interpolate.interp2d(nxi, nyi, BSgridC.T, kind='linear')
-#     Drule = scipy.interpolate.interp2d(nxi, nyi, BSgridD.T, kind='linear')
+    # These are rules for interpolating the response functions
+    Arule = scipy.interpolate.interp2d(nxi, nyi, BSgridA.T, kind='linear')
+    Brule = scipy.interpolate.interp2d(nxi, nyi, BSgridB.T, kind='linear')
+    Crule = scipy.interpolate.interp2d(nxi, nyi, BSgridC.T, kind='linear')
+    Drule = scipy.interpolate.interp2d(nxi, nyi, BSgridD.T, kind='linear')
 
-#     # Calculating the gradients of the response functions
-#     KAx, KAy = np.gradient(BSgridA); KAy=KAy/dny; KAx = KAx/dnx
-#     KBx, KBy = np.gradient(BSgridB); KBy=KBy/dny; KBx = KBx/dnx
-#     KCx, KCy = np.gradient(BSgridC); KCy=KCy/dny; KCx = KCx/dnx
-#     KDx, KDy = np.gradient(BSgridD); KDy=KDy/dny; KDx = KDx/dnx
+    # Calculating the gradients of the response functions
+    KAx, KAy = np.gradient(BSgridA); KAy=KAy/dny; KAx = KAx/dnx
+    KBx, KBy = np.gradient(BSgridB); KBy=KBy/dny; KBx = KBx/dnx
+    KCx, KCy = np.gradient(BSgridC); KCy=KCy/dny; KCx = KCx/dnx
+    KDx, KDy = np.gradient(BSgridD); KDy=KDy/dny; KDx = KDx/dnx
 
-#     # These are rules for interpolating the response functions
-#     KAxrule = scipy.interpolate.interp2d(nxi, nyi, KAx.T, kind='linear')
-#     KAyrule = scipy.interpolate.interp2d(nxi, nyi, KAy.T, kind='linear')
-#     KBxrule = scipy.interpolate.interp2d(nxi, nyi, KBx.T, kind='linear')
-#     KByrule = scipy.interpolate.interp2d(nxi, nyi, KBy.T, kind='linear')
-#     KCxrule = scipy.interpolate.interp2d(nxi, nyi, KCx.T, kind='linear')
-#     KCyrule = scipy.interpolate.interp2d(nxi, nyi, KCy.T, kind='linear')
-#     KDxrule = scipy.interpolate.interp2d(nxi, nyi, KDx.T, kind='linear')
-#     KDyrule = scipy.interpolate.interp2d(nxi, nyi, KDy.T, kind='linear')
+    # These are rules for interpolating the response functions
+    KAxrule = scipy.interpolate.interp2d(nxi, nyi, KAx.T, kind='linear')
+    KAyrule = scipy.interpolate.interp2d(nxi, nyi, KAy.T, kind='linear')
+    KBxrule = scipy.interpolate.interp2d(nxi, nyi, KBx.T, kind='linear')
+    KByrule = scipy.interpolate.interp2d(nxi, nyi, KBy.T, kind='linear')
+    KCxrule = scipy.interpolate.interp2d(nxi, nyi, KCx.T, kind='linear')
+    KCyrule = scipy.interpolate.interp2d(nxi, nyi, KCy.T, kind='linear')
+    KDxrule = scipy.interpolate.interp2d(nxi, nyi, KDx.T, kind='linear')
+    KDyrule = scipy.interpolate.interp2d(nxi, nyi, KDy.T, kind='linear')
 
-#     return \
-#     Arule, Brule, Crule, Drule,\
-#     KAxrule, KAyrule, KBxrule, KByrule, KCxrule, KCyrule, KDxrule, KDyrule
+    return \
+    Arule, Brule, Crule, Drule,\
+    KAxrule, KAyrule, KBxrule, KByrule, KCxrule, KCyrule, KDxrule, KDyrule
 
-# def setupdetectorresponse2(\
-#          BSgridA, BSgridB, BSgridC, BSgridD,
-#          nxi, nyi, dnx, dny):
+def setupdetectorresponse2(\
+         BSgridA, BSgridB, BSgridC, BSgridD,
+         nxi, nyi, dnx, dny):
 
-#     # Same as the old setupdetectorresponse, but with a transposed BSgrid coming in
+    # Same as the old setupdetectorresponse, but with a transposed BSgrid coming in
     
-#     # These are rules for interpolating the response functions
-#     Arule = scipy.interpolate.interp2d(nxi, nyi, BSgridA, kind='linear')
-#     Brule = scipy.interpolate.interp2d(nxi, nyi, BSgridB, kind='linear')
-#     Crule = scipy.interpolate.interp2d(nxi, nyi, BSgridC, kind='linear')
-#     Drule = scipy.interpolate.interp2d(nxi, nyi, BSgridD, kind='linear')
+    # These are rules for interpolating the response functions
+    Arule = scipy.interpolate.interp2d(nxi, nyi, BSgridA, kind='linear')
+    Brule = scipy.interpolate.interp2d(nxi, nyi, BSgridB, kind='linear')
+    Crule = scipy.interpolate.interp2d(nxi, nyi, BSgridC, kind='linear')
+    Drule = scipy.interpolate.interp2d(nxi, nyi, BSgridD, kind='linear')
 
-#     # Calculating the gradients of the response functions
-#     KAx, KAy = np.gradient(BSgridA.T); KAy=KAy/dny; KAx = KAx/dnx
-#     KBx, KBy = np.gradient(BSgridB.T); KBy=KBy/dny; KBx = KBx/dnx
-#     KCx, KCy = np.gradient(BSgridC.T); KCy=KCy/dny; KCx = KCx/dnx
-#     KDx, KDy = np.gradient(BSgridD.T); KDy=KDy/dny; KDx = KDx/dnx
+    # Calculating the gradients of the response functions
+    KAx, KAy = np.gradient(BSgridA.T); KAy=KAy/dny; KAx = KAx/dnx
+    KBx, KBy = np.gradient(BSgridB.T); KBy=KBy/dny; KBx = KBx/dnx
+    KCx, KCy = np.gradient(BSgridC.T); KCy=KCy/dny; KCx = KCx/dnx
+    KDx, KDy = np.gradient(BSgridD.T); KDy=KDy/dny; KDx = KDx/dnx
 
-#     # These are rules for interpolating the response functions
-#     KAxrule = scipy.interpolate.interp2d(nxi, nyi, KAx.T, kind='linear')
-#     KAyrule = scipy.interpolate.interp2d(nxi, nyi, KAy.T, kind='linear')
-#     KBxrule = scipy.interpolate.interp2d(nxi, nyi, KBx.T, kind='linear')
-#     KByrule = scipy.interpolate.interp2d(nxi, nyi, KBy.T, kind='linear')
-#     KCxrule = scipy.interpolate.interp2d(nxi, nyi, KCx.T, kind='linear')
-#     KCyrule = scipy.interpolate.interp2d(nxi, nyi, KCy.T, kind='linear')
-#     KDxrule = scipy.interpolate.interp2d(nxi, nyi, KDx.T, kind='linear')
-#     KDyrule = scipy.interpolate.interp2d(nxi, nyi, KDy.T, kind='linear')
+    # These are rules for interpolating the response functions
+    KAxrule = scipy.interpolate.interp2d(nxi, nyi, KAx.T, kind='linear')
+    KAyrule = scipy.interpolate.interp2d(nxi, nyi, KAy.T, kind='linear')
+    KBxrule = scipy.interpolate.interp2d(nxi, nyi, KBx.T, kind='linear')
+    KByrule = scipy.interpolate.interp2d(nxi, nyi, KBy.T, kind='linear')
+    KCxrule = scipy.interpolate.interp2d(nxi, nyi, KCx.T, kind='linear')
+    KCyrule = scipy.interpolate.interp2d(nxi, nyi, KCy.T, kind='linear')
+    KDxrule = scipy.interpolate.interp2d(nxi, nyi, KDx.T, kind='linear')
+    KDyrule = scipy.interpolate.interp2d(nxi, nyi, KDy.T, kind='linear')
 
-#     return \
-#     Arule, Brule, Crule, Drule,\
-#     KAxrule, KAyrule, KBxrule, KByrule, KCxrule, KCyrule, KDxrule, KDyrule
+    return \
+    Arule, Brule, Crule, Drule,\
+    KAxrule, KAyrule, KBxrule, KByrule, KCxrule, KCyrule, KDxrule, KDyrule
 
 def setupdetectorresponse3(\
          BSgridA, BSgridB, BSgridC, BSgridD,
