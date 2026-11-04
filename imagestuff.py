@@ -596,3 +596,21 @@ class ExtlvecxAngleManager:
 
         # update rotation matrices
         self.construct_rotation_matrices()
+
+
+def straighten_it_out(xvalues,z_of_x):
+    p_linear = np.polyfit(xvalues,z_of_x,1); print(p_linear)
+    theta = -np.atan(p_linear[0]); print('theta',theta*180/np.pi)
+    c = np.cos(theta); s = np.sin(theta); R = np.array([[c, -s], [s, c]]); print('R',R)
+    npts = np.size(xvalues); print('npts',npts)
+    zvalues_straight = np.polyval(p_linear,xvalues)
+    zvalues_actual = z_of_x
+    vector_straight_array = np.vstack([xvalues,zvalues_straight])
+    vector_actual_array = np.vstack([xvalues,zvalues_actual])
+    print('shape', np.shape(vector_straight_array))
+    new_vector_straight_array = R@vector_straight_array; print('shape',np.shape(new_vector_straight_array))
+    new_vector_actual_array = R@vector_actual_array
+    offset = new_vector_straight_array[1,0]
+    new_vector_straight_array[1,:] -= offset
+    new_vector_actual_array[1,:] -= offset
+    return vector_straight_array, vector_actual_array, new_vector_straight_array, new_vector_actual_array
